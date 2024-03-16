@@ -1,11 +1,33 @@
-app waspPlayground {
+app WaspPlayground {
   wasp: {
     version: "^0.12.4"
   },
-  title: "wasp-playground"
+  title: "wasp-playground",
 }
 
 route RootRoute { path: "/", to: MainPage }
 page MainPage {
+  authRequired: false,
   component: import { MainPage } from "@src/MainPage"
+}
+
+entity Task {=psl
+  id Int @id @default(autoincrement())
+  description String
+  isDone Boolean @default(false)
+psl=}
+
+query getTasks {
+  fn: import getTasks from "@src/tasks/queries",
+  entities: [Task]
+}
+
+action createTask {
+  fn: import {createTask} from "@src/tasks/actions",
+  entities :[Task]
+}
+
+action updateTask {
+  fn: import {updateTask} from "@src/tasks/actions",
+  entities :[Task]
 }
