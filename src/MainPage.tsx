@@ -1,4 +1,5 @@
 import { ChangeEvent, FormEvent } from "react"
+import { logout } from "wasp/client/auth"
 import { createTask, getTasks, updateTask, useQuery } from "wasp/client/operations"
 import { Task } from "wasp/entities"
 
@@ -6,6 +7,7 @@ export const MainPage = () => {
   const { data: tasks, isLoading, error } = useQuery(getTasks)
   return (
     <div>
+      <button onClick={logout}>Logout</button>
       <NewTaskForm />
       {tasks && <TaskList tasks={tasks} />}
       {isLoading && 'Loading...'}

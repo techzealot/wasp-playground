@@ -3,11 +3,18 @@ app WaspPlayground {
     version: "^0.12.4"
   },
   title: "wasp-playground",
+  auth: {
+    userEntity: User,
+    methods: {
+      usernameAndPassword: {}
+    },
+    onAuthFailedRedirectTo: "/login"
+  }
 }
 
 route RootRoute { path: "/", to: MainPage }
 page MainPage {
-  authRequired: false,
+  authRequired: true,
   component: import { MainPage } from "@src/MainPage"
 }
 
@@ -15,6 +22,8 @@ entity Task {=psl
   id Int @id @default(autoincrement())
   description String
   isDone Boolean @default(false)
+  user User @relation(fields: [userId], references: [id])
+  userId Int
 psl=}
 
 query getTasks {
@@ -30,4 +39,19 @@ action createTask {
 action updateTask {
   fn: import {updateTask} from "@src/tasks/actions",
   entities :[Task]
+}
+
+entity User {=psl
+  id Int @id @default(autoincrement())
+  tasks Task[]
+psl=}
+
+route SignupRoute { path: "/signup", to: SignupPage }
+page SignupPage {
+  component: import { SignupPage } from "@src/SignupPage"
+}
+
+route LoginRoute { path: "/login", to: LoginPage }
+page LoginPage {
+  component: import { LoginPage } from "@src/LoginPage"
 }
